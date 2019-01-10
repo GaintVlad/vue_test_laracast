@@ -1,18 +1,27 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Coupon vel_msg="Welcome to Your Vue.js App"/>
+    <question :question="question"/>
+    <countdown />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Coupon from './components/Coupon'
+import Question from './components/Question'
+import Countdown from './components/Countdown'
 
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
+    name: 'app',
+    components: {
+        Coupon, Question, Countdown
+    },
+    data() {
+        return {
+            question: {title: 'The Title', body: 'the body'}
+        }
+    }
 }
 </script>
 
