@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div v-if="completed" v-text="expiredText"></div>
+        <div v-if="(remaining <= 0)" v-text="expiredText"></div>
         <div v-else>
-            <span>{{remaining.days}} Days</span>
-            <span>{{remaining.hours}} Hours</span>
-            <span>{{remaining.minutes}} Minutes</span>
-            <span id="seconds">{{remaining.seconds}} Seconds</span>
+            <span>{{remaining.days()}} Days</span>
+            <span>{{remaining.hours()}} Hours</span>
+            <span>{{remaining.minutes()}} Minutes</span>
+            <span id="seconds">{{remaining.seconds()}} Seconds</span>
             left...
         </div>
     </div>
@@ -24,25 +24,13 @@
             }
         },
         computed: {
-            completed() {
-                return this.remaining.total <= 0;
-            },
             remaining() {
                 let remaining = moment.duration(Date.parse(this.until) - this.now)
                 if (remaining <= 0)
                     this.$emit('finished')
 
-                return {
-                    total: remaining,
-                    days: remaining.days(),
-                    hours: remaining.hours(),
-                    minutes: remaining.minutes(),
-                    seconds: remaining.seconds()
-                }
+                return remaining;
             }
-        },
-        mounted() {
-
         },
         created() {
             let interval = setInterval( () => {
