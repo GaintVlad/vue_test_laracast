@@ -24,70 +24,57 @@ describe('Countdown.vue', () => {
         see('10 Seconds')
     })
 
-    it('reduce countdown every second', (done)=>{
+    it('reduce countdown every second', async ()=>{
         see('10 Seconds')
         clock.tick(1000)
+        await wrapper.vm.$nextTick()
 
-        assertOnNextTick(()=>{
-            see('9 Seconds')
-        }, done);
+        see('9 Seconds')
     })
 
-    it('it shows an expired message when the countdown has completed', (done)=>{
+    it('it shows an expired message when the countdown has completed', async ()=>{
         see('10 Seconds')
         clock.tick(10000)
+        await wrapper.vm.$nextTick()
 
-        assertOnNextTick(()=>{
-            see('Now Expired')
-        }, done);
-
+        see('Now Expired')
     })
 
-    it('it shows a custom expired message when the countdown has completed', (done)=>{
+    it('it shows a custom expired message when the countdown has completed', async ()=>{
         wrapper.setProps({expiredText: 'Context is over.'})
 
         see('10 Seconds')
         clock.tick(10000)
+        await wrapper.vm.$nextTick()
 
-        assertOnNextTick(()=>{
-            see('Context is over.')
-        }, done);
+        see('Context is over.')
     })
 
-    it('broadcast when the countdown is finished', (done)=>{
+    it('broadcast when the countdown is finished', async ()=>{
         see('10 Seconds')
         clock.tick(10000)
 
-        assertOnNextTick(()=>{
-            expect(wrapper.emitted().finished).toBeTruthy()
-        }, done);
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.emitted().finished).toBeTruthy()
+
     })
 
-    it('clears the interval once completed', (done)=>{
+    it('clears the interval once completed', async ()=>{
         see('10 Seconds')
         clock.tick(10000)
         expect(wrapper.vm.now.getSeconds()).toBe(10)
 
-        assertOnNextTick(()=>{
-            clock.tick(5000)
-            expect(wrapper.vm.now.getSeconds()).toBe(10)
-        }, done);
+        await wrapper.vm.$nextTick()
+
+        clock.tick(5000)
+        expect(wrapper.vm.now.getSeconds()).toBe(10)
+
 
     })
 
     const see = (text, selector) => {
         let wrap = selector ? wrapper.find(selector) : wrapper;
         expect(wrap.html()).toContain(text);
-    }
-
-    const assertOnNextTick = (callback, done)  => {
-        wrapper.vm.$nextTick(()=>{
-            try {
-            callback()
-            done()
-            } catch (e) {
-                done(e)
-            }
-        })
     }
 });
